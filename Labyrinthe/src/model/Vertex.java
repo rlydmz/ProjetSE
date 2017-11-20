@@ -32,4 +32,12 @@ public class Vertex {
         this.y = y;
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Vertex{");
+        sb.append("x=").append(x);
+        sb.append(", y=").append(y);
+        sb.append('}');
+        return sb.toString();
+    }
 }
