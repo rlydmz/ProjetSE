@@ -1,10 +1,25 @@
-import com.sun.javafx.scene.traversal.Direction;
-import org.jgrapht.graph.DefaultEdge;
-import view.View;
+import Controller.Controller;
 
-public class Main {
+import javafx.application.Application;
+import javafx.stage.Stage;
 
-    public static void main(String[] args){
-
-    }
+public class Main extends Application {
+	
+	static Controller controller;
+	
+	public static void main(String[] args) {
+		controller = Controller.getInstance();
+		launch();
+	}
+	
+	@Override
+	public void start(Stage stage) throws Exception {
+		controller.start(stage);
+	}
+	
+	@Override
+	public void stop() {
+		System.exit(0);
+	}
+	
 }
