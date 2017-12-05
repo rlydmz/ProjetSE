@@ -66,6 +66,7 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
     }
 
     public boolean doesntExist(Vertex vertex, Directions dir) {
+        /*
         switch(dir) {
         case NORTH: return (vertex.getY() == 0);
         case SOUTH: return (vertex.getY() == 15);
@@ -73,11 +74,17 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         case WEST: return (vertex.getX() == 0);
         }
         return false;
+        */
+        return true;
     }
 
     public Object getEqualVertex(Vertex v) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public void printContent(){
+
     }
     
 }

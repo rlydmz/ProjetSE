@@ -58,11 +58,15 @@ public class Vertex {
     public boolean inBorders(Directions dir) {
         // TODO Auto-generated method stub
         switch(dir) {
-        case NORTH:return (this.y == 0);
-        case SOUTH:return (this.y == 15);
-        case EAST:return (this.x == 15);
-        case WEST:return (this.x == 0);
+        case NORTH: if(getY() == 0)
+                        return false;
+        case SOUTH: if(getY() == 15)
+                        return false;
+        case EAST: if(getX() == 15)
+                        return false;
+        case WEST: if(getX() == 0)
+                        return false;
         }
-        return false;
+        return true;
     }
 }

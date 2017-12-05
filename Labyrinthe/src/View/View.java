@@ -4,13 +4,13 @@ package View;
 import Model.Labyrinthe;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.shape.*;
 
 import java.awt.*;
 
@@ -19,6 +19,7 @@ public class View extends Application {
     private static View ourInstance = null;
     private Scene scene;
     private Pane pane;
+    private ImageView playerView;
 
     static final int SPAN = 4;
     static final int WALL = 2;
@@ -33,6 +34,8 @@ public class View extends Application {
 
         drawFrame(primaryStage, 16, 16);
 
+        drawNiceGuy(2, 0);
+
         primaryStage.show();
     }
 
@@ -43,7 +46,7 @@ public class View extends Application {
         );
         scene.setFill(SCENECOLOR);
 
-        javafx.scene.shape.Rectangle square;
+        Rectangle square;
         stage.setScene(scene);
 
         square = new Rectangle(0, 0,
@@ -80,8 +83,16 @@ public class View extends Application {
 
     }
 
+    public void drawNiceGuy(double x, double y){
 
-    
+        Image image = new Image(getClass().getResource("../images/player.png").toExternalForm());
+        playerView = new ImageView(image);
+        pane.getChildren().add(playerView);
+        playerView.setX(x*((WALL+CELL)*SPAN) + (WALL*SPAN));
+        playerView.setY(y*((WALL+CELL)*SPAN) + (WALL*SPAN));
+
+    }
+
     public static View getInstance() {
         if(ourInstance == null ) {
             ourInstance = new View();

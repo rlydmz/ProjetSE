@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Exit {
 
-	Vertex position;
+	private Vertex position;
 	
 	public Exit() {
 		position = new Vertex(0,0,0);

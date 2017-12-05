@@ -61,11 +61,12 @@ public class Labyrinthe {
     }
     
     public void buildRandomPath (Vertex vertex){
+
+        System.out.println(vertex);
         // une liste aleatoire des 4 directions
         Vector<Directions> v = new Vector<Directions>();
         for(int i=0;i<4;++i)
             v.add(Directions.values()[i]);
-
 
         Directions directions[] = new Directions[4];
         for(int i=0;i<directions.length;++i){
@@ -76,6 +77,7 @@ public class Labyrinthe {
         //pour chacune de ces directions, on avance en profondeur d abord
         for(int i=0;i<4;++i){
             Directions dir = directions[i];
+            System.out.println(dir + " -> " + vertex.inBorders(dir));
             if(vertex.inBorders(dir) && graph.doesntExist(vertex,dir)){
                 int x = vertex.getX();
                 int y = vertex.getY();
@@ -92,6 +94,7 @@ public class Labyrinthe {
                 buildRandomPath(next);
             }
         }
+
     }
     
     public void openDoorRandom(){
@@ -150,6 +153,10 @@ public class Labyrinthe {
         for(Vertex vertex:graph.vertexSet())
         vertex.setNbr(0);
         calculateManhattanDistance(source, target);
+    }
+
+    public void printGraph(){
+        graph.printContent();
     }
     
 }
