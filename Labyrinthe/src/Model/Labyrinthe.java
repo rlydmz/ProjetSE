@@ -62,7 +62,7 @@ public class Labyrinthe {
     
     public void buildRandomPath (Vertex vertex){
 
-        System.out.println(vertex);
+        //System.out.println(vertex);
         // une liste aleatoire des 4 directions
         Vector<Directions> v = new Vector<Directions>();
         for(int i=0;i<4;++i)
@@ -74,27 +74,43 @@ public class Labyrinthe {
             directions[i] = v.get(index);
             v.remove(index);
         }
-        //pour chacune de ces directions, on avance en profondeur d abord
-        for(int i=0;i<4;++i){
-            Directions dir = directions[i];
-            System.out.println(dir + " -> " + vertex.inBorders(dir));
-            if(vertex.inBorders(dir) && graph.doesntExist(vertex,dir)){
-                int x = vertex.getX();
-                int y = vertex.getY();
-                int xt = 0,yt=0;
-                switch(dir){
-                    case NORTH: xt = x; yt = y-1; break;
-                    case SOUTH: xt = x; yt = y+1; break;
-                    case EAST: xt = x+1; yt = y; break;
-                    case WEST: xt = x-1; yt = y; break;
-                }
-                Vertex next = new Vertex(xt,yt,vertex.getNbr()+1);
-                graph.addVertex(next);
-                graph.addEdge(vertex,next);
-                buildRandomPath(next);
-            }
-        }
 
+        if(graph.isDone()==false) {
+            //pour chacune de ces directions, on avance en profondeur d abord
+            for (int i = 0; i < 4; ++i) {
+                Directions dir = directions[i];
+                System.out.println(graph.doesntExist(vertex, dir));
+                if (vertex.inBorders(dir) && graph.doesntExist(vertex, dir)) {
+                    graph.addVertexToArray(vertex);
+                    int x = vertex.getX();
+                    int y = vertex.getY();
+                    int xt = 0, yt = 0;
+                    switch (dir) {
+                        case NORTH:
+                            xt = x;
+                            yt = y - 1;
+                            break;
+                        case SOUTH:
+                            xt = x;
+                            yt = y + 1;
+                            break;
+                        case EAST:
+                            xt = x + 1;
+                            yt = y;
+                            break;
+                        case WEST:
+                            xt = x - 1;
+                            yt = y;
+                            break;
+                    }
+                    Vertex next = new Vertex(xt, yt, vertex.getNbr() + 1);
+                    graph.addVertex(next);
+                    graph.addEdge(vertex, next);
+                    buildRandomPath(next);
+                }
+            }
+
+        }
     }
     
     public void openDoorRandom(){
@@ -156,7 +172,7 @@ public class Labyrinthe {
     }
 
     public void printGraph(){
-        graph.printContent();
+        graph.printVertexList();
     }
     
 }

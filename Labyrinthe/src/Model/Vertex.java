@@ -20,6 +20,13 @@ public class Vertex {
         this.nbr=i;
     }
 
+    public boolean equals(Object v){
+        Vertex vertex = (Vertex)v;
+        if(vertex.getX() == x && vertex.getY() == y)
+            return true;
+        return false;
+    }
+
     public int getX() {
 
         return x;

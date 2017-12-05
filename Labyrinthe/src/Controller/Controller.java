@@ -17,6 +17,7 @@ public class Controller {
 		Vertex v = laby.GetExit().getPosition();
 		laby.getG().addVertex(v);
 		laby.buildRandomPath(v);
+		laby.getG().printVertexList();
 		laby.getPackman().startPosition(laby, laby.getG().getEqualVertex(v));
 	}
 

@@ -6,15 +6,16 @@ import java.util.Random;
 
 public class Graph extends SimpleGraph<Vertex, Edge>{
 
-    private Vertex[][] vertexList;
+    private Vertex[] vertexList;
+    private int nbElement;
+    private static int SIZE = 16;
 
     public Graph(int size){
         super(Edge.class);
-        vertexList = new Vertex[size][size];
-        for(int i=0; i<size; i++){
-            for(int j=0; j<size; j++){
-                vertexList[i][j] = new Vertex(i, j);
-            }
+        nbElement = 0;
+        vertexList = new Vertex[size*size];
+        for(int i=0; i<size*size; i++){
+            vertexList[i] = null;
         }
     }
 
@@ -66,15 +67,23 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
     }
 
     public boolean doesntExist(Vertex vertex, Directions dir) {
-        /*
+        Vertex tmpVertex = null;
         switch(dir) {
-        case NORTH: return (vertex.getY() == 0);
-        case SOUTH: return (vertex.getY() == 15);
-        case EAST: return (vertex.getX() == 15);
-        case WEST: return (vertex.getX() == 0);
+            case NORTH: tmpVertex = new Vertex(vertex.getX(), vertex.getY()-1); break;
+            case SOUTH: tmpVertex = new Vertex(vertex.getX(), vertex.getY()+1); break;
+            case EAST:  tmpVertex = new Vertex(vertex.getX()+1, vertex.getY()); break;
+            case WEST:  tmpVertex = new Vertex(vertex.getX()-1, vertex.getY()); break;
         }
-        return false;
-        */
+        if(tmpVertex == null){
+            System.out.println("tmpVertex NULL");
+            return false;
+        }
+        for (int i = 0; i < SIZE*SIZE; i++) {
+            if(vertexList[i] != null){
+                if(vertexList[i].equals(tmpVertex))
+                    return false;
+            }
+        }
         return true;
     }
 
@@ -83,8 +92,29 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         return null;
     }
 
-    public void printContent(){
+    public void addVertexToArray(Vertex v){
+        for (int i = 0; i < SIZE*SIZE; i++) {
+            if(vertexList[i] == null){
+                vertexList[i] = v;
+                break;
+            }
+        }
+        nbElement++;
+    }
 
+    public void printVertexList(){
+        for (int i = 0; i < SIZE*SIZE; i++) {
+            if(vertexList[i] != null)
+                System.out.println(vertexList[i]);
+        }
+    }
+
+    public boolean isDone(){
+        System.out.println("nbELem = " + nbElement + " - SIZE = " + vertexList.length);
+        if(nbElement == vertexList.length){
+            System.out.println(nbElement == vertexList.length);
+            return true;}
+        return false;
     }
     
 }
