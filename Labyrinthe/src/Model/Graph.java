@@ -2,20 +2,24 @@ package Model;
 
 import org.jgrapht.graph.SimpleGraph;
 import Model.Labyrinthe.Directions;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import java.util.Random;
 
 public class Graph extends SimpleGraph<Vertex, Edge>{
 
-    private Vertex[] vertexList;
+    private Vertex[][] vertexList;
     private int nbElement;
-    private static int SIZE = 16;
+    private static int SIZE = Labyrinthe.getInstance().getHeight();
 
     public Graph(int size){
         super(Edge.class);
         nbElement = 0;
-        vertexList = new Vertex[size*size];
-        for(int i=0; i<size*size; i++){
-            vertexList[i] = null;
+        vertexList = new Vertex[SIZE][SIZE];
+        for(int i = 0; i < SIZE; i++){
+            for (int j = 0; j < SIZE; j++) {
+                vertexList[i][j] = null;
+            }
         }
     }
 
@@ -67,7 +71,17 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
     }
 
     public boolean doesntExist(Vertex vertex, Directions dir) {
+        Vertex newVertex = getVertexByDir(vertex,dir);
+        if(vertexList[newVertex.getX()][newVertex.getY()] == null || !vertexList[newVertex.getX()][newVertex.getY()].equals(newVertex)){
+            System.out.println("doesntExist  = false, newVertex = " + vertexList[newVertex.getX()][newVertex.getY()]);
+            return true;
+        }
+        else
+            System.out.println("doesntExist  = true, newVertex = " + vertexList[newVertex.getX()][newVertex.getY()]);
+            return false;
+        /*
         Vertex tmpVertex = null;
+
         switch(dir) {
             case NORTH: tmpVertex = new Vertex(vertex.getX(), vertex.getY()-1); break;
             case SOUTH: tmpVertex = new Vertex(vertex.getX(), vertex.getY()+1); break;
@@ -85,6 +99,7 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
             }
         }
         return true;
+        */
     }
 
     public Object getEqualVertex(Vertex v) {
@@ -92,14 +107,14 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         return null;
     }
 
-    public void addVertexToArray(Vertex v){
-        for (int i = 0; i < SIZE*SIZE; i++) {
-            if(vertexList[i] == null){
-                vertexList[i] = v;
-                break;
-            }
+    public boolean addVertexToArray(Vertex v){
+        if(vertexList[v.getX()][v.getY()] == null){
+            vertexList[v.getX()][v.getY()] = v;
+            return true;
         }
-        nbElement++;
+        else{
+            return false;
+        }
     }
 
     public void printVertexList(){
@@ -110,9 +125,10 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
     }
 
     public boolean isDone(){
-        System.out.println("nbELem = " + nbElement + " - SIZE = " + vertexList.length);
+
+        //System.out.println("nbELem = " + nbElement + " - SIZE = " + vertexList.length);
+        //System.out.println("IS DONE = " + (nbElement == vertexList.length));
         if(nbElement == vertexList.length){
-            System.out.println(nbElement == vertexList.length);
             return true;}
         return false;
     }

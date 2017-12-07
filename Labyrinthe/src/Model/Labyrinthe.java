@@ -4,8 +4,8 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Vector;
-import Model.Edge.Type;
 
+import Model.Edge.Type;
 
 
 public class Labyrinthe {
@@ -16,11 +16,11 @@ public class Labyrinthe {
     private NiceGuy packman;
     private Exit exit;
     private Random random;
-        
+
     private static Labyrinthe ourInstance = null;
-    
+
     public static Labyrinthe getInstance() {
-        if(ourInstance == null ) {
+        if (ourInstance == null) {
             ourInstance = new Labyrinthe();
         }
         return ourInstance;
@@ -32,7 +32,7 @@ public class Labyrinthe {
         exit = new Exit();
         random = new Random();
     }
-    
+
     public enum Directions {
         NORTH,
         SOUTH,
@@ -40,48 +40,49 @@ public class Labyrinthe {
         WEST;
     }
 
-    public int getHeight(){
+    public int getHeight() {
         return height;
     }
 
-    public int getWidth(){
+    public int getWidth() {
         return width;
     }
-    
+
     public Graph getG() {
         return graph;
     }
-    
+
     public NiceGuy getPackman() {
         return packman;
     }
-    
+
     public Exit GetExit() {
         return exit;
     }
-    
-    public void buildRandomPath (Vertex vertex){
+
+    public void buildRandomPath(Vertex vertex) {
+
+        graph.addVertexToArray(vertex);
+        System.out.println(vertex);
 
         //System.out.println(vertex);
         // une liste aleatoire des 4 directions
         Vector<Directions> v = new Vector<Directions>();
-        for(int i=0;i<4;++i)
+        for (int i = 0; i < 4; ++i)
             v.add(Directions.values()[i]);
 
         Directions directions[] = new Directions[4];
-        for(int i=0;i<directions.length;++i){
+        for (int i = 0; i < directions.length; ++i) {
             int index = random.nextInt(v.size());
             directions[i] = v.get(index);
             v.remove(index);
         }
-
-        if(graph.isDone()==false) {
             //pour chacune de ces directions, on avance en profondeur d abord
             for (int i = 0; i < 4; ++i) {
                 Directions dir = directions[i];
-                System.out.println(graph.doesntExist(vertex, dir));
+                //System.out.println(graph.doesntExist(vertex, dir));
                 if (vertex.inBorders(dir) && graph.doesntExist(vertex, dir)) {
-                    graph.addVertexToArray(vertex);
+                    //graph.addVertexToArray(vertex);
                     int x = vertex.getX();
                     int y = vertex.getY();
                     int xt = 0, yt = 0;
@@ -106,27 +107,27 @@ public class Labyrinthe {
                     Vertex next = new Vertex(xt, yt, vertex.getNbr() + 1);
                     graph.addVertex(next);
                     graph.addEdge(vertex, next);
+                    //if (graph.isDone() == false) {
                     buildRandomPath(next);
-                }
+                //}
             }
-
         }
     }
-    
-    public void openDoorRandom(){
+
+    public void openDoorRandom() {
         //On essaie 1000 fois, apres quoi on renonce
-        for(int i=1;i<=1000;++i){
+        for (int i = 1; i <= 1000; ++i) {
             //On choisi un sommet au hasard
             Vertex vertex = graph.randomVertex();
-            if(vertex != null){
+            if (vertex != null) {
                 // On choisi une direction au hasard (on devrait prendre seulement
                 // celles qui correspondent a des murs ...)
-                Labyrinthe.Directions dir = Directions.values() [random.nextInt(Directions.values().length)];
-                if(isWall(vertex, dir)){
+                Labyrinthe.Directions dir = Directions.values()[random.nextInt(Directions.values().length)];
+                if (isWall(vertex, dir)) {
                     Vertex vertex2 = graph.getVertexByDir(vertex, dir);
-                    if(vertex2 != null){
+                    if (vertex2 != null) {
                         Edge edge = graph.getEdge(vertex, vertex2);
-                        if(edge == null){
+                        if (edge == null) {
                             // On ajoute un saut entre ces sommets
                             graph.addEdge(vertex, vertex2, new Edge(Type.OPENED_DOOR));
                             return;
@@ -136,43 +137,44 @@ public class Labyrinthe {
             }
         }
     }
+
     private boolean isWall(Vertex vertex, Directions dir) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    private void calculateManhattanDistance(Vertex source, Vertex target){
+    private void calculateManhattanDistance(Vertex source, Vertex target) {
         Queue<Vertex> fifo = new ArrayDeque<Vertex>();
         target.setNbr(1);
         fifo.add(target);
-        while(!fifo.isEmpty()){
+        while (!fifo.isEmpty()) {
             Vertex actual = fifo.remove();
-            for(Directions dir:Directions.values()){
-                if(this.isOpened(actual,dir)){
-                    Vertex next = graph.getVertexByDir(actual,dir);
-                    if(next.getNbr()==0){
-                        next.setNbr(actual.getNbr()+1);
-                        if(next!=source)
-                        fifo.add(next);
+            for (Directions dir : Directions.values()) {
+                if (this.isOpened(actual, dir)) {
+                    Vertex next = graph.getVertexByDir(actual, dir);
+                    if (next.getNbr() == 0) {
+                        next.setNbr(actual.getNbr() + 1);
+                        if (next != source)
+                            fifo.add(next);
                     }
                 }
             }
         }
     }
-    
+
     private boolean isOpened(Vertex actual, Directions dir) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    public void launchManhattan(Vertex source, Vertex target){
-        for(Vertex vertex:graph.vertexSet())
-        vertex.setNbr(0);
+    public void launchManhattan(Vertex source, Vertex target) {
+        for (Vertex vertex : graph.vertexSet())
+            vertex.setNbr(0);
         calculateManhattanDistance(source, target);
     }
 
-    public void printGraph(){
+    public void printGraph() {
         graph.printVertexList();
     }
-    
+
 }

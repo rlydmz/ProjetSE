@@ -1,6 +1,8 @@
 package View;
 
 
+import Model.Edge;
+import Model.Graph;
 import Model.Labyrinthe;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -10,9 +12,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.util.Iterator;
+import java.util.Set;
 
 public class View extends Application {
 
@@ -34,7 +39,11 @@ public class View extends Application {
 
         drawFrame(primaryStage, 16, 16);
 
-        drawNiceGuy(2, 0);
+        //drawNiceGuy(2, 0);
+
+        drawAllWalls(Labyrinthe.getInstance().getG());
+        drawPath(Labyrinthe.getInstance().getG());
+        drawCell(0,0,WALLCOLOR);
 
         primaryStage.show();
     }
@@ -81,6 +90,77 @@ public class View extends Application {
             }
         }
 
+    }
+
+    public void drawWall(int xSource, int ySource, int xDest, int yDest, Paint color){
+        int x=0, y=0, xspan=0, yspan=0;
+        if(ySource == yDest){
+            x = (WALL + xSource * (WALL + CELL)) * SPAN;
+            y = (ySource * (WALL + CELL)) * SPAN;
+            //x = ((WALL + CELL) + (WALL + CELL) * ((int)(xSource+xDest)/2)) * SPAN;
+            //y = (WALL + ySource * (WALL + CELL)) * SPAN;
+            xspan = CELL * SPAN;
+            yspan = WALL * SPAN;
+            Rectangle square = new Rectangle(x, y, xspan, yspan);
+            square.setFill(color);
+            pane.getChildren().add(square);
+        }
+        else if(xSource == xDest){
+            x = (xSource * (WALL + CELL)) * SPAN;
+            y = (WALL + ySource * (WALL + CELL)) * SPAN;
+            //y = ((WALL + CELL) + (WALL + CELL) * ((int)(ySource+yDest)/2)) * SPAN;
+            xspan = WALL * SPAN;
+            yspan = CELL * SPAN;
+            Rectangle square = new Rectangle(x, y, xspan, yspan);
+            square.setFill(color);
+            pane.getChildren().add(square);
+        }
+    }
+
+
+    public void drawAllWalls(Graph g){
+        Set<Edge> set = g.edgeSet();
+        Iterator i = set.iterator();
+        while(i.hasNext()){
+            Edge e = (Edge)i.next();
+            drawWall(e.getSource().getX(),
+                    e.getSource().getY(),
+                    e.getTarget().getX(),
+                    e.getTarget().getY(),
+                    WALLCOLOR);
+        }
+    }
+
+    public void drawPath(Graph g) throws InterruptedException {
+        Set<Edge> set = g.edgeSet();
+        Iterator i = set.iterator();
+        int red = 20;
+        int blue = 0;
+        int cpt = 0;
+        while(i.hasNext()){
+            Edge e = (Edge)i.next();
+            drawCell(e.getTarget().getX(),
+                    e.getTarget().getY(),
+                    Color.rgb(red, 0,blue));
+            Text t = new Text((e.getTarget().getX()*(WALL+CELL) + WALL)*SPAN, (e.getTarget().getY()*(WALL+CELL) + WALL)*SPAN, Integer.toString(cpt));
+            pane.getChildren().add(t);
+            if(red == 200)
+                 blue++;
+            else
+                red++;
+            cpt++;
+        }
+    }
+
+    public void drawCell(int xSource, int ySource, Paint color){
+        int x=0, y=0, xspan=0, yspan=0;
+            x = (WALL + xSource * (WALL + CELL)) * SPAN;
+            y = (WALL + ySource * (WALL + CELL)) * SPAN;
+            xspan = CELL * SPAN;
+            yspan = CELL * SPAN;
+            Rectangle square = new Rectangle(x, y, xspan, yspan);
+            square.setFill(color);
+            pane.getChildren().add(square);
     }
 
     public void drawNiceGuy(double x, double y){
