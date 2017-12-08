@@ -79,27 +79,11 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         else
             System.out.println("doesntExist  = true, newVertex = " + vertexList[newVertex.getX()][newVertex.getY()]);
             return false;
-        /*
-        Vertex tmpVertex = null;
+    }
 
-        switch(dir) {
-            case NORTH: tmpVertex = new Vertex(vertex.getX(), vertex.getY()-1); break;
-            case SOUTH: tmpVertex = new Vertex(vertex.getX(), vertex.getY()+1); break;
-            case EAST:  tmpVertex = new Vertex(vertex.getX()+1, vertex.getY()); break;
-            case WEST:  tmpVertex = new Vertex(vertex.getX()-1, vertex.getY()); break;
-        }
-        if(tmpVertex == null){
-            System.out.println("tmpVertex NULL");
-            return false;
-        }
-        for (int i = 0; i < SIZE*SIZE; i++) {
-            if(vertexList[i] != null){
-                if(vertexList[i].equals(tmpVertex))
-                    return false;
-            }
-        }
-        return true;
-        */
+    public Edge getEdge(Vertex v, Directions dir){
+        Vertex newVertex = getVertexByDir(v, dir);
+        return getEdge(v, newVertex);
     }
 
     public Object getEqualVertex(Vertex v) {

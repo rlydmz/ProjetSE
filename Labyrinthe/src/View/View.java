@@ -41,9 +41,9 @@ public class View extends Application {
 
         //drawNiceGuy(2, 0);
 
+        primaryStage.show();
         drawAllWalls(Labyrinthe.getInstance().getG());
-        drawPath(Labyrinthe.getInstance().getG());
-        drawCell(0,0,WALLCOLOR);
+        //drawPath(Labyrinthe.getInstance().getG());
 
         primaryStage.show();
     }
@@ -118,20 +118,38 @@ public class View extends Application {
     }
 
 
-    public void drawAllWalls(Graph g){
+    public void drawAllWalls(Graph g) throws InterruptedException {
         Set<Edge> set = g.edgeSet();
         Iterator i = set.iterator();
         while(i.hasNext()){
             Edge e = (Edge)i.next();
-            drawWall(e.getSource().getX(),
-                    e.getSource().getY(),
-                    e.getTarget().getX(),
-                    e.getTarget().getY(),
-                    WALLCOLOR);
+
+            if(e.getSource().getX() == e.getTarget().getX()){
+                drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX()+1, e.getTarget().getY(), SCENECOLOR);
+                if(e.getSource().getY() < e.getTarget().getY()){
+                    drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX(), e.getTarget().getY()+1, WALLCOLOR);
+                    drawWall(e.getSource().getX()+1, e.getSource().getY(), e.getTarget().getX()+1, e.getTarget().getY()+1, WALLCOLOR);
+                }
+                else{
+                    drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX(), e.getTarget().getY()-1, WALLCOLOR);
+                    drawWall(e.getSource().getX()+1, e.getSource().getY(), e.getTarget().getX()+1, e.getTarget().getY()-1, WALLCOLOR);
+                }
+
+            }
+            else if(e.getSource().getY() == e.getTarget().getY()) {
+                drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX(), e.getTarget().getY() + 1, SCENECOLOR);
+                if (e.getSource().getX() < e.getTarget().getX()) {
+                    drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX() + 1, e.getTarget().getY(), WALLCOLOR);
+                    drawWall(e.getSource().getX(), e.getSource().getY() + 1, e.getTarget().getX() + 1, e.getTarget().getY() + 1, WALLCOLOR);
+                } else {
+                    drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX() - 1, e.getTarget().getY(), WALLCOLOR);
+                    drawWall(e.getSource().getX(), e.getSource().getY() + 1, e.getTarget().getX() - 1, e.getTarget().getY() + 1, WALLCOLOR);
+                }
+            }
         }
     }
 
-    public void drawPath(Graph g) throws InterruptedException {
+    public void drawPath(Graph g){
         Set<Edge> set = g.edgeSet();
         Iterator i = set.iterator();
         int red = 20;
