@@ -4,13 +4,15 @@ import org.jgrapht.graph.SimpleGraph;
 import Model.Labyrinthe.Directions;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 
 public class Graph extends SimpleGraph<Vertex, Edge>{
 
     private Vertex[][] vertexList;
     private int nbElement;
-    private static int SIZE = Labyrinthe.getInstance().getHeight();
+    private static int SIZE = Labyrinthe.SIZE;
 
     public Graph(int size){
         super(Edge.class);
@@ -51,7 +53,7 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
                 return actual;
             }
         case EAST:
-            if(actual.getX() < 15) {
+            if(actual.getX() <= 15) {
                 v.setX(actual.getX() + 1);
                 v.setY(actual.getY());
                 return v;
@@ -59,7 +61,7 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
                 return actual;
             }
         case WEST:
-            if(actual.getX() > 0) {
+            if(actual.getX() >= 0) {
                 v.setX(actual.getX() - 1);
                 v.setY(actual.getY());
                 return v;
@@ -73,17 +75,27 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
     public boolean doesntExist(Vertex vertex, Directions dir) {
         Vertex newVertex = getVertexByDir(vertex,dir);
         if(vertexList[newVertex.getX()][newVertex.getY()] == null || !vertexList[newVertex.getX()][newVertex.getY()].equals(newVertex)){
-            System.out.println("doesntExist  = false, newVertex = " + vertexList[newVertex.getX()][newVertex.getY()]);
             return true;
         }
         else
-            System.out.println("doesntExist  = true, newVertex = " + vertexList[newVertex.getX()][newVertex.getY()]);
             return false;
     }
 
     public Edge getEdge(Vertex v, Directions dir){
         Vertex newVertex = getVertexByDir(v, dir);
         return getEdge(v, newVertex);
+    }
+
+    public Edge getEdge(Vertex vs, Vertex vt){
+        Set<Edge> edgeList = edgeSet();
+        Iterator i = edgeList.iterator();
+        while(i.hasNext()){
+            Edge e = (Edge)i.next();
+            if((e.getSource().equals(vs) && e.getTarget().equals(vt)) || (e.getSource().equals(vt) && e.getTarget().equals(vs))){
+                return e;
+            }
+        }
+        return null;
     }
 
     public Object getEqualVertex(Vertex v) {
@@ -101,20 +113,21 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         }
     }
 
-    public void printVertexList(){
-        for (int i = 0; i < SIZE*SIZE; i++) {
-            if(vertexList[i] != null)
-                System.out.println(vertexList[i]);
+    public boolean hasXsEqualToLimits(){
+        Set<Edge> set = edgeSet();
+        Iterator i = set.iterator();
+        int cpt = 0;
+        while(i.hasNext()){
+            Edge e = (Edge)i.next();
+            System.out.println(e.getTarget());
+            if(e.getTarget().getX() == 0 || e.getTarget().getX() == 15)
+                cpt++;
         }
-    }
-
-    public boolean isDone(){
-
-        //System.out.println("nbELem = " + nbElement + " - SIZE = " + vertexList.length);
-        //System.out.println("IS DONE = " + (nbElement == vertexList.length));
-        if(nbElement == vertexList.length){
-            return true;}
-        return false;
+        System.out.println("cpt = " + cpt);
+        if(cpt != 0)
+            return true;
+        else
+            return false;
     }
     
 }

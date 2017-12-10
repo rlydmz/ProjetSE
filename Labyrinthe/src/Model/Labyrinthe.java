@@ -1,9 +1,6 @@
 package Model;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
 import Model.Edge.Type;
 
@@ -16,6 +13,8 @@ public class Labyrinthe {
     private NiceGuy packman;
     private Exit exit;
     private Random random;
+
+    public static int SIZE = 16;
 
     private static Labyrinthe ourInstance = null;
 
@@ -75,6 +74,7 @@ public class Labyrinthe {
             directions[i] = v.get(index);
             v.remove(index);
         }
+
         //pour chacune de ces directions, on avance en profondeur d abord
         for (int i = 0; i < 4; ++i) {
             Directions dir = directions[i];
@@ -167,8 +167,5 @@ public class Labyrinthe {
         calculateManhattanDistance(source, target);
     }
 
-    public void printGraph() {
-        graph.printVertexList();
-    }
 
 }

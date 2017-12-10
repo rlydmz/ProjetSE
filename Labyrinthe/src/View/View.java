@@ -4,6 +4,7 @@ package View;
 import Model.Edge;
 import Model.Graph;
 import Model.Labyrinthe;
+import Model.Vertex;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -18,6 +19,8 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.Set;
+
+import static Model.Labyrinthe.Directions.*;
 
 public class View extends Application {
 
@@ -39,10 +42,13 @@ public class View extends Application {
 
         drawFrame(primaryStage, 16, 16);
 
-        //drawNiceGuy(2, 0);
+        drawNiceGuy(2, 0);
 
         primaryStage.show();
-        drawAllWalls(Labyrinthe.getInstance().getG());
+
+        System.out.println(Labyrinthe.getInstance().getG().edgeSet());
+        Labyrinthe.getInstance().getG().hasXsEqualToLimits();
+        drawAllWalls(Labyrinthe.getInstance());
         //drawPath(Labyrinthe.getInstance().getG());
 
         primaryStage.show();
@@ -92,6 +98,26 @@ public class View extends Application {
 
     }
 
+    public void testWalls(Labyrinthe laby){
+        Graph g = laby.getG();
+        Set<Edge> set = g.edgeSet();
+        Iterator i = set.iterator();
+        int cpt = 0;
+        while (i.hasNext()){
+            Edge e =(Edge)i.next();
+            if(laby.isWall(e.getSource(), EAST))
+                cpt++;
+            if(laby.isWall(e.getSource(), WEST))
+                cpt++;
+            if(laby.isWall(e.getSource(), NORTH))
+                cpt++;
+            if(laby.isWall(e.getSource(), SOUTH))
+                cpt++;
+            System.out.println(e.getSource() + " a " + cpt + " murs autour");
+            cpt=0;
+        }
+    }
+
     public void drawWall(int xSource, int ySource, int xDest, int yDest, Paint color){
         int x=0, y=0, xspan=0, yspan=0;
         if(ySource == yDest){
@@ -117,37 +143,69 @@ public class View extends Application {
         }
     }
 
-
-    public void drawAllWalls(Graph g) throws InterruptedException {
-        Set<Edge> set = g.edgeSet();
+    public void drawAllWalls(Labyrinthe laby) throws InterruptedException {
+        Set<Edge> set = laby.getG().edgeSet();
         Iterator i = set.iterator();
         while(i.hasNext()){
             Edge e = (Edge)i.next();
-
-            if(e.getSource().getX() == e.getTarget().getX()){
-                drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX()+1, e.getTarget().getY(), SCENECOLOR);
-                if(e.getSource().getY() < e.getTarget().getY()){
-                    drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX(), e.getTarget().getY()+1, WALLCOLOR);
-                    drawWall(e.getSource().getX()+1, e.getSource().getY(), e.getTarget().getX()+1, e.getTarget().getY()+1, WALLCOLOR);
-                }
-                else{
-                    drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX(), e.getTarget().getY()-1, WALLCOLOR);
-                    drawWall(e.getSource().getX()+1, e.getSource().getY(), e.getTarget().getX()+1, e.getTarget().getY()-1, WALLCOLOR);
-                }
-
+            if(e.getTarget().getX() == 0 || e.getTarget().getX() == 15){
+                if(laby.isWall(e.getTarget(), EAST))
+                    drawWall(e.getTarget().getX()+1,
+                            e.getTarget().getY(),
+                            e.getTarget().getX()+1,
+                            e.getTarget().getY()+1,
+                            WALLCOLOR);
+                if(laby.isWall(e.getTarget(), WEST))
+                    drawWall(e.getTarget().getX(),
+                            e.getTarget().getY(),
+                            e.getTarget().getX(),
+                            e.getTarget().getY()+1,
+                            WALLCOLOR);
+                if(laby.isWall(e.getTarget(), NORTH))
+                    drawWall(e.getTarget().getX(),
+                            e.getTarget().getY(),
+                            e.getTarget().getX()+1,
+                            e.getTarget().getY(),
+                            WALLCOLOR);
+                if(laby.isWall(e.getTarget(), SOUTH))
+                    drawWall(e.getTarget().getX(),
+                            e.getTarget().getY()+1,
+                            e.getTarget().getX()+1,
+                            e.getTarget().getY()+1,
+                            WALLCOLOR);
             }
-            else if(e.getSource().getY() == e.getTarget().getY()) {
-                drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX(), e.getTarget().getY() + 1, SCENECOLOR);
-                if (e.getSource().getX() < e.getTarget().getX()) {
-                    drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX() + 1, e.getTarget().getY(), WALLCOLOR);
-                    drawWall(e.getSource().getX(), e.getSource().getY() + 1, e.getTarget().getX() + 1, e.getTarget().getY() + 1, WALLCOLOR);
-                } else {
-                    drawWall(e.getTarget().getX(), e.getTarget().getY(), e.getTarget().getX() - 1, e.getTarget().getY(), WALLCOLOR);
-                    drawWall(e.getSource().getX(), e.getSource().getY() + 1, e.getTarget().getX() - 1, e.getTarget().getY() + 1, WALLCOLOR);
-                }
+            else{
+                if(laby.isWall(e.getSource(), EAST))
+                    drawWall(e.getSource().getX()+1,
+                            e.getSource().getY(),
+                            e.getSource().getX()+1,
+                            e.getSource().getY()+1,
+                            WALLCOLOR);
+                if(laby.isWall(e.getSource(), WEST))
+                    drawWall(e.getSource().getX(),
+                            e.getSource().getY(),
+                            e.getSource().getX(),
+                            e.getSource().getY()+1,
+                            WALLCOLOR);
+                if(laby.isWall(e.getSource(), NORTH))
+                    drawWall(e.getSource().getX(),
+                            e.getSource().getY(),
+                            e.getSource().getX()+1,
+                            e.getSource().getY(),
+                            WALLCOLOR);
+                if(laby.isWall(e.getSource(), SOUTH))
+                    drawWall(e.getSource().getX(),
+                            e.getSource().getY()+1,
+                            e.getSource().getX()+1,
+                            e.getSource().getY()+1,
+                            WALLCOLOR);
             }
+
+
         }
     }
+
+
 
     public void drawPath(Graph g){
         Set<Edge> set = g.edgeSet();
