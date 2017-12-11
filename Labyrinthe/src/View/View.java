@@ -6,7 +6,6 @@ import Model.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,9 +17,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
-import java.awt.*;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -49,7 +45,7 @@ public class View extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Labyrinthe laby = Labyrinthe.getInstance();
-        gameManager = new GameManager(laby, this);
+        gameManager = new GameManager(laby, this, primaryStage);
 
         pane = new Pane();
 
@@ -61,117 +57,20 @@ public class View extends Application {
         drawCandies(laby.getCandies());
         //drawPath(laby.getG());
 
-
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-
-
-                if (event.getCode() == KeyCode.UP) {
-                    goNORTH = true;
-                    System.out.println("UP");
-                    System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
-                    System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
-                }
-
-                if (event.getCode() == KeyCode.DOWN) {
-                    goSOUTH = true;
-                    System.out.println("DOWN");
-                    System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
-                    System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
-                }
-
-                if (event.getCode() == KeyCode.LEFT) {
-                    goWEST = true;
-                    System.out.println("LEFT");
-                    System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
-                    System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
-                }
-
-                if (event.getCode() == KeyCode.RIGHT){
-                    goEAST = true;
-                    System.out.println("RIGHT");
-                    System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
-                    System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
-                }
-            }
-        });
-
-        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                switch (event.getCode()) {
-                    case UP:    goNORTH = false; break;
-                    case DOWN:  goSOUTH = false; break;
-                    case LEFT:  goWEST = false; break;
-                    case RIGHT: goEAST  = false; break;
-                }
-            }
-        });
-
-
         System.out.println(Labyrinthe.getInstance().getG().edgeSet());
         Labyrinthe.getInstance().getG().hasXsEqualToLimits();
         drawAllWalls(Labyrinthe.getInstance());
 
         primaryStage.show();
 
-        AnimationTimer timer = new AnimationTimer() {
 
-            int cpt = 0;
-
-            @Override
-            public void handle(long now) {
-                int x = laby.getPackman().getPosition().getX();
-                int y = laby.getPackman().getPosition().getY();
-                Vertex vTemp = laby.getPackman().getPosition();
-
-                if (goNORTH) {
-                    if(y>0 && !laby.isWall(vTemp,NORTH)) {
-                        goNORTH = false;
-                        y -= 1;
-                    }
-                }
-                if (goSOUTH){
-                    if(y<15 && !laby.isWall(vTemp,SOUTH)) {
-                        goSOUTH = false;
-                        y += 1;
-                    }
-                }
-                if (goEAST){
-                    if(x<15 && !laby.isWall(vTemp,EAST)) {
-                        goEAST = false;
-                        x += 1;
-                    }
-                }
-                if (goWEST){
-                    if(x>0 && !laby.isWall(vTemp,WEST)) {
-                        goWEST = false;
-                        x -= 1;
-                    }
-                }
-
-                laby.getPackman().setPosition(x,y);
-                pane.getChildren().remove(playerView);
-                drawNiceGuy(laby.getPackman().getPosition());
-
-                if(cpt == 60){
-                    BadGuy badGuy = (BadGuy)laby.getBadGuyArmy().iterator().next();
-                    //System.out.println(badGuy.getPosition());
-                    //laby.launchManhattan(badGuy.getPosition(), laby.getPackman().getPosition());
-                    //drawPath(laby.getG());
-                    gameManager.movebadGuy(laby, badGuy);
-                    cpt = 0;
-                }
-
-                gameManager.HandleGame();
-                drawEntities(laby);
-                cpt++;
-            }
-        };
-        timer.start();
-
+        gameManager.HandleGame(primaryStage);
     }
+
+    public Scene getScene() {
+        return scene;
+    }
+
 
     public void drawFrame(Stage stage, int nbrX, int nbrY){
         scene = new Scene(pane,
@@ -336,6 +235,10 @@ public class View extends Application {
         }
     }
 
+    public ImageView getPlayerView() {
+        return playerView;
+    }
+
     public void drawCandies(HashSet<Candy> candies){
 
         Iterator i = candies.iterator();
@@ -359,6 +262,7 @@ public class View extends Application {
                     image = new Image(getClass().getResource("../images/candy-1.png").toExternalForm());
                     break;
             }
+
             ImageView candyView = new ImageView(image);
             pane.getChildren().add(candyView);
             candyView.setX(candy.getPosition().getX()*((WALL+CELL)*SPAN) + (WALL*SPAN));
