@@ -1,10 +1,12 @@
 package View;
 
 
+import Controller.GameManager;
 import Model.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,6 +18,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -31,6 +34,7 @@ public class View extends Application {
     private Pane pane;
     private ImageView playerView;
     private ImageView exitView;
+    private GameManager gameManager;
     private boolean goNORTH,goSOUTH,goWEST,goEAST;
 
 
@@ -45,6 +49,7 @@ public class View extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Labyrinthe laby = Labyrinthe.getInstance();
+        gameManager = new GameManager(laby, this);
 
         pane = new Pane();
 
@@ -54,6 +59,8 @@ public class View extends Application {
         drawExit(Labyrinthe.getInstance().GetExit().getPosition());
         drawBadGuyArmy(laby.getBadGuyArmy());
         drawCandies(laby.getCandies());
+        //drawPath(laby.getG());
+
 
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
@@ -110,6 +117,9 @@ public class View extends Application {
         primaryStage.show();
 
         AnimationTimer timer = new AnimationTimer() {
+
+            int cpt = 0;
+
             @Override
             public void handle(long now) {
                 int x = laby.getPackman().getPosition().getX();
@@ -144,6 +154,19 @@ public class View extends Application {
                 laby.getPackman().setPosition(x,y);
                 pane.getChildren().remove(playerView);
                 drawNiceGuy(laby.getPackman().getPosition());
+
+                if(cpt == 60){
+                    BadGuy badGuy = (BadGuy)laby.getBadGuyArmy().iterator().next();
+                    //System.out.println(badGuy.getPosition());
+                    //laby.launchManhattan(badGuy.getPosition(), laby.getPackman().getPosition());
+                    //drawPath(laby.getG());
+                    gameManager.movebadGuy(laby, badGuy);
+                    cpt = 0;
+                }
+
+                gameManager.HandleGame();
+                drawEntities(laby);
+                cpt++;
             }
         };
         timer.start();
@@ -220,7 +243,7 @@ public class View extends Application {
         }
     }
 
-    public void drawAllWalls(Labyrinthe laby) throws InterruptedException {
+    public void drawAllWalls(Labyrinthe laby){
         Set<Edge> set = laby.getG().edgeSet();
         Iterator i = set.iterator();
         while(i.hasNext()){
@@ -314,6 +337,7 @@ public class View extends Application {
     }
 
     public void drawCandies(HashSet<Candy> candies){
+
         Iterator i = candies.iterator();
         Image image;
         while(i.hasNext()){
@@ -343,6 +367,39 @@ public class View extends Application {
     }
 
 
+    public void drawPath(Graph g){
+        Set<Edge> set = g.edgeSet();
+        Iterator i = set.iterator();
+        int red = 20;
+        int blue = 0;
+        int cpt = 0;
+        while(i.hasNext()){
+            Edge e = (Edge)i.next();
+            drawCell(e.getTarget().getX(),
+                    e.getTarget().getY(),
+                    Color.rgb(red, 0,blue));
+            Text t = new Text((e.getTarget().getX()*(WALL+CELL) + WALL)*SPAN, (e.getTarget().getY()*(WALL+CELL) + WALL)*SPAN, Integer.toString(e.getSource().getNbr()));
+            pane.getChildren().add(t);
+            if(red == 200)
+                blue++;
+            else
+            red++;
+            cpt++;
+        }
+   }
+
+        public void drawCell(int xSource, int ySource, Paint color){
+            int x=0, y=0, xspan=0, yspan=0;
+            x = (WALL + xSource * (WALL + CELL)) * SPAN;
+            y = (WALL + ySource * (WALL + CELL)) * SPAN;
+            xspan = CELL * SPAN;
+            yspan = CELL * SPAN;
+            Rectangle square = new Rectangle(x, y, xspan, yspan);
+            square.setFill(color);
+            pane.getChildren().add(square);
+        }
+
+
     public static View getInstance() {
         if(ourInstance == null ) {
             ourInstance = new View();
@@ -350,8 +407,20 @@ public class View extends Application {
         return ourInstance;
     }
 
-    public void keyboardAndTimerHandler(){
-
+    public void drawEntities(Labyrinthe laby){
+        for (int i = 0; i < pane.getChildren().size(); i++) {
+            if(pane.getChildren().get(i).getClass().equals(ImageView.class))
+                pane.getChildren().remove(i);
+        }
+        drawNiceGuy(laby.getPackman().getPosition());
+        drawExit(laby.GetExit().getPosition());
+        drawBadGuyArmy(laby.getBadGuyArmy());
+        drawCandies(laby.getCandies());
     }
+
+    public Pane getPane(){
+        return pane;
+    }
+
 
 }

@@ -124,7 +124,7 @@ public class Labyrinthe {
                         yt = y;
                         break;
                 }
-                Vertex next = new Vertex(xt, yt, vertex.getNbr() + 1);
+                Vertex next = new Vertex(xt, yt);
                 graph.addVertex(next);
                 graph.addEdge(vertex, next);
                 buildRandomPath(next);
@@ -157,6 +157,16 @@ public class Labyrinthe {
     }
 
     private void calculateManhattanDistance(Vertex source, Vertex target) {
+        System.out.println(source.getNbr() + " - " + target.getNbr());
+
+        Set<Edge> listEdge = this.getG().edgeSet();
+        Iterator i = listEdge.iterator();
+        while(i.hasNext()){
+            Edge e = (Edge)i.next();
+            if(e.getSource().getNbr() != 0 || e.getTarget().getNbr() != 0)
+                System.out.println(e);
+        }
+
         Queue<Vertex> fifo = new ArrayDeque<Vertex>();
         target.setNbr(1);
         fifo.add(target);
@@ -167,7 +177,7 @@ public class Labyrinthe {
                     Vertex next = graph.getVertexByDir(actual, dir);
                     if (next.getNbr() == 0) {
                         next.setNbr(actual.getNbr() + 1);
-                        if (next != source)
+                        if (!next.equals(source))
                             fifo.add(next);
                     }
                 }
@@ -181,8 +191,9 @@ public class Labyrinthe {
     }
 
     private boolean isOpened(Vertex actual, Directions dir) {
-        // TODO Auto-generated method stub
-        return false;
+        if(isWall(actual, dir))
+            return false;
+        return true;
     }
 
     public void launchManhattan(Vertex source, Vertex target) {
@@ -191,5 +202,10 @@ public class Labyrinthe {
         calculateManhattanDistance(source, target);
     }
 
+    public boolean isConnected(Vertex src, Vertex target){
+        if(getG().getEdge(src, target) != null)
+            return true;
+        return false;
+    }
 
 }
