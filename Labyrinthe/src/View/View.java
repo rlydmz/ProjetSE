@@ -61,22 +61,34 @@ public class View extends Application {
                 if (event.getCode() == KeyCode.UP) {
                     goNORTH = true;
                     System.out.println("UP");
+                    System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
+                    System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
                 }
 
                 if (event.getCode() == KeyCode.DOWN) {
                     goSOUTH = true;
                     System.out.println("DOWN");
+                    System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
+                    System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
                 }
+
                 if (event.getCode() == KeyCode.LEFT) {
                     goWEST = true;
                     System.out.println("LEFT");
+                    System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
+                    System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
                 }
+
                 if (event.getCode() == KeyCode.RIGHT){
                     goEAST = true;
-                System.out.println("RIGHT");
+                    System.out.println("RIGHT");
+                    System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
+                    System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
                 }
             }
         });
+
+
 
         drawNiceGuy(laby.getPackman().getPosition());
         drawExit(Labyrinthe.getInstance().GetExit().getPosition());
@@ -99,11 +111,32 @@ public class View extends Application {
             public void handle(long now) {
                 int x = laby.getPackman().getPosition().getX();
                 int y = laby.getPackman().getPosition().getY();
+                Vertex vTemp = laby.getPackman().getPosition();
 
-                if (goNORTH) y -= 1;
-                if (goSOUTH) y += 1;
-                if (goEAST)  x += 1;
-                if (goWEST)  x -= 1;
+                if (goNORTH) {
+                    if(y>0 && !laby.isWall(vTemp,NORTH)) {
+                        goNORTH = false;
+                        y -= 1;
+                    }
+                }
+                if (goSOUTH){
+                    if(y<15 && !laby.isWall(vTemp,SOUTH)) {
+                        goSOUTH = false;
+                        y += 1;
+                    }
+                }
+                if (goEAST){
+                    if(x<15 && !laby.isWall(vTemp,EAST)) {
+                        goEAST = false;
+                        x += 1;
+                    }
+                }
+                if (goWEST){
+                    if(x>0 && !laby.isWall(vTemp,WEST)) {
+                        goWEST = false;
+                        x -= 1;
+                    }
+                }
 
                 laby.getPackman().setPosition(x,y);
                 pane.getChildren().remove(playerView);
