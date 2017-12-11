@@ -1,10 +1,7 @@
 package View;
 
 
-import Model.Edge;
-import Model.Graph;
-import Model.Labyrinthe;
-import Model.Vertex;
+import Model.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -17,6 +14,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -40,12 +38,16 @@ public class View extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        Labyrinthe laby = Labyrinthe.getInstance();
+
         pane = new Pane();
 
         drawFrame(primaryStage, 16, 16);
 
-        drawNiceGuy(2, 0);
+        drawNiceGuy(laby.getPackman().getPosition());
         drawExit(Labyrinthe.getInstance().GetExit().getPosition());
+        drawBadGuyArmy(laby.getBadGuyArmy());
 
         primaryStage.show();
 
@@ -242,13 +244,13 @@ public class View extends Application {
             pane.getChildren().add(square);
     }
 
-    public void drawNiceGuy(double x, double y){
+    public void drawNiceGuy(Vertex v){
 
         Image image = new Image(getClass().getResource("../images/player.png").toExternalForm());
         playerView = new ImageView(image);
         pane.getChildren().add(playerView);
-        playerView.setX(x*((WALL+CELL)*SPAN) + (WALL*SPAN));
-        playerView.setY(y*((WALL+CELL)*SPAN) + (WALL*SPAN));
+        playerView.setX(v.getX()*((WALL+CELL)*SPAN) + (WALL*SPAN));
+        playerView.setY(v.getY()*((WALL+CELL)*SPAN) + (WALL*SPAN));
 
     }
 
@@ -259,6 +261,19 @@ public class View extends Application {
         exitView.setX(v.getX()*((WALL+CELL)*SPAN) + (WALL*SPAN));
         exitView.setY(v.getY()*((WALL+CELL)*SPAN) + (WALL*SPAN));
     }
+
+    public void drawBadGuyArmy(HashSet<BadGuy> badGuyArmy){
+        Image image = new Image(getClass().getResource("../images/bad.png").toExternalForm());
+        Iterator i = badGuyArmy.iterator();
+        while(i.hasNext()){
+            BadGuy badGuy = (BadGuy)i.next();
+            ImageView badGuyView = new ImageView(image);
+            pane.getChildren().add(badGuyView);
+            badGuyView.setX(badGuy.getPosition().getX()*((WALL+CELL)*SPAN) + (WALL*SPAN));
+            badGuyView.setX(badGuy.getPosition().getY()*((WALL+CELL)*SPAN) + (WALL*SPAN));
+        }
+    }
+
 
     public static View getInstance() {
         if(ourInstance == null ) {

@@ -13,11 +13,12 @@ public class Controller {
 	private Controller() {
 		laby = Labyrinthe.getInstance();
 		view = View.getInstance();
-		laby.GetExit().startPosition();
+		Spawner spawner = new Spawner(laby);
+		spawner.HandleSpawning();
+		//laby.GetExit().startPosition();
 		Vertex v = laby.GetExit().getPosition();
 		laby.getG().addVertex(v);
 		laby.buildRandomPath(v);
-		laby.getPackman().startPosition(laby, laby.getG().getEqualVertex(v));
 	}
 
 	public static Controller getInstance() {
