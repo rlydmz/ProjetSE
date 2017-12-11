@@ -6,12 +6,19 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.scene.*;
+import javafx.scene.image.*;
+import javafx.scene.input.KeyEvent;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -34,6 +41,7 @@ public class View extends Application {
     static final int CELL = 9;
     private static final Paint WALLCOLOR = Color.BURLYWOOD;
     private static final Paint SCENECOLOR = Color.WHITE;
+    boolean goNORTH,goSOUTH,goWEST,goEAST;
 
 
     @Override
@@ -45,6 +53,31 @@ public class View extends Application {
 
         drawFrame(primaryStage, 16, 16);
 
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+
+
+                if (event.getCode() == KeyCode.UP) {
+                    goNORTH = true;
+                    System.out.println("UP");
+                }
+
+                if (event.getCode() == KeyCode.DOWN) {
+                    goSOUTH = true;
+                    System.out.println("DOWN");
+                }
+                if (event.getCode() == KeyCode.LEFT) {
+                    goWEST = true;
+                    System.out.println("LEFT");
+                }
+                if (event.getCode() == KeyCode.RIGHT){
+                    goEAST = true;
+                System.out.println("RIGHT");
+                }
+            }
+        });
+
         drawNiceGuy(laby.getPackman().getPosition());
         drawExit(Labyrinthe.getInstance().GetExit().getPosition());
         drawBadGuyArmy(laby.getBadGuyArmy());
@@ -55,7 +88,29 @@ public class View extends Application {
         Labyrinthe.getInstance().getG().hasXsEqualToLimits();
         drawAllWalls(Labyrinthe.getInstance());
 
+        System.out.println("getx : "+ Labyrinthe.getInstance().getPackman().getPosition().getX());
+        System.out.println("gety : "+ Labyrinthe.getInstance().getPackman().getPosition().getY());
+
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                int x = laby.getPackman().getPosition().getX();
+                int y = laby.getPackman().getPosition().getY();
+
+                if (goNORTH) y -= 1;
+                if (goSOUTH) y += 1;
+                if (goEAST)  x += 1;
+                if (goWEST)  x -= 1;
+
+                laby.getPackman().setPosition(x,y);
+                pane.getChildren().remove(playerView);
+                drawNiceGuy(laby.getPackman().getPosition());
+            }
+        };
+        timer.start();
 
     }
 
