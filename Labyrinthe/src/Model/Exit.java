@@ -5,15 +5,15 @@ import java.util.Random;
 public class Exit {
 
 	private Vertex position;
-	
+
 	public Exit() {
 		position = new Vertex(0,0,0);
 	}
-	
+
 	public Vertex getPosition() {
 		return position;
 	}
-	
+
 	public void setPosition(int x,int y) {
 		this.position.setX(x);
 		this.position.setY(y);

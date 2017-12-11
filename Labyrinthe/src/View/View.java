@@ -28,6 +28,8 @@ public class View extends Application {
     private Scene scene;
     private Pane pane;
     private ImageView playerView;
+    private ImageView exitView;
+
 
     static final int SPAN = 4;
     static final int WALL = 2;
@@ -43,15 +45,16 @@ public class View extends Application {
         drawFrame(primaryStage, 16, 16);
 
         drawNiceGuy(2, 0);
+        drawExit(Labyrinthe.getInstance().GetExit().getPosition());
 
         primaryStage.show();
 
         System.out.println(Labyrinthe.getInstance().getG().edgeSet());
         Labyrinthe.getInstance().getG().hasXsEqualToLimits();
         drawAllWalls(Labyrinthe.getInstance());
-        //drawPath(Labyrinthe.getInstance().getG());
 
         primaryStage.show();
+
     }
 
     public void drawFrame(Stage stage, int nbrX, int nbrY){
@@ -247,6 +250,14 @@ public class View extends Application {
         playerView.setX(x*((WALL+CELL)*SPAN) + (WALL*SPAN));
         playerView.setY(y*((WALL+CELL)*SPAN) + (WALL*SPAN));
 
+    }
+
+    public void drawExit(Vertex v){
+        Image image = new Image(getClass().getResource("../images/door_open.png").toExternalForm());
+        exitView = new ImageView(image);
+        pane.getChildren().add(exitView);
+        exitView.setX(v.getX()*((WALL+CELL)*SPAN) + (WALL*SPAN));
+        exitView.setY(v.getY()*((WALL+CELL)*SPAN) + (WALL*SPAN));
     }
 
     public static View getInstance() {

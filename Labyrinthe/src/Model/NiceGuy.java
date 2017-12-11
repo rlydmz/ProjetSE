@@ -11,7 +11,7 @@ public class NiceGuy {
 
 	public void startPosition(Labyrinthe model, Object equalVertex) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public Vertex getPosition(){
