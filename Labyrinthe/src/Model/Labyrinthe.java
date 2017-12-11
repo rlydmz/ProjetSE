@@ -13,6 +13,7 @@ public class Labyrinthe {
     private NiceGuy packman;
     private Exit exit;
     private HashSet<BadGuy> badGuyArmy;
+    private HashSet<Candy> candies;
     private Random random;
 
     public static int SIZE = 16;
@@ -27,10 +28,11 @@ public class Labyrinthe {
     }
 
     private Labyrinthe() {
-        graph = new Graph(height);
+        graph = new Graph(SIZE);
         packman = new NiceGuy();
         exit = new Exit();
         badGuyArmy = new HashSet<BadGuy>();
+        candies = new HashSet<Candy>();
         random = new Random();
     }
 
@@ -67,6 +69,18 @@ public class Labyrinthe {
 
     public void addBadGuyToArmy(BadGuy badGuy){
         badGuyArmy.add(badGuy);
+    }
+
+    public HashSet<Candy> getCandies(){
+        return candies;
+    }
+
+    public void addCandy(Candy candy){
+        candies.add(candy);
+    }
+
+    public void removeCandy(Candy candy){
+        candies.remove(candy);
     }
 
     public void buildRandomPath(Vertex vertex) {
