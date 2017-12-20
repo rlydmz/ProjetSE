@@ -11,6 +11,7 @@ import java.util.Set;
 public class Graph extends SimpleGraph<Vertex, Edge>{
 
     private Vertex[][] vertexList;
+    private Switch[] switchList;
     private int nbElement;
     private static int SIZE = Labyrinthe.SIZE;
 

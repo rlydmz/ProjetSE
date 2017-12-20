@@ -13,8 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Spawner {
 
     private Labyrinthe laby;
-    private static int MIN_BAD_GUY = 3;
-    private static int MAX_BAD_GUY = 6;
+    private static int MIN_BAD_GUY = 2;
+    private static int MAX_BAD_GUY = 4;
     private static int MIN_CANDY = 5;
     private static int MAX_CANDY = 8;
 
