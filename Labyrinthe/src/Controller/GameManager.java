@@ -159,7 +159,8 @@ public class GameManager {
         Iterator i = candies.iterator();
         while (i.hasNext()){
             BadGuy badGuy = (BadGuy) i.next();
-            if(laby.getPackman().getPosition().equals(badGuy.getPosition()) && gameOver == false){
+            if(laby.getPackman().getPosition().equals(badGuy.getPosition()) && !gameOver){
+                gameOver=true;
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("YOU LOSE");
                 alert.setHeaderText(null);
@@ -171,14 +172,15 @@ public class GameManager {
     }
 
     public void manageExit(){
-        if (laby.getPackman().getPosition().equals(laby.GetExit().getPosition()) && canPassDoor() && gameOver == false){
+        if (laby.getPackman().getPosition().equals(laby.GetExit().getPosition()) && !gameOver ){
+            gameOver=true;
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("YOU WON");
             alert.setHeaderText(null);
             alert.setContentText("Well done, you reached the Exit !");
 
             alert.show();
-            gameOver=true;
+
         }
     }
 
@@ -186,8 +188,7 @@ public class GameManager {
         HashSet<Candy> candies = laby.getCandies();
         if(candies.size() == 0)
             return true;
-        else
-            return false;
+        return false;
     }
 
     public void movebadGuy(Labyrinthe laby, BadGuy badGuy){
