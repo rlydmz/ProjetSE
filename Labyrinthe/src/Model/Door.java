@@ -1,26 +1,30 @@
 package Model;
 
 
-public class Door {
+public class Door extends Entity{
     private Vertex position;
     boolean isOpen = false;
 
-    public Door (int x, int y){
-        position = new Vertex(x,y);
+    /**
+     * Constructeur de la classe Door
+     */
+    public Door (){
+        super();
+        isOpen = false;
     }
 
-    public Vertex getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vertex position) {
-        this.position = position;
-    }
-
+    /**
+     * Retourne un boolean determinant l'etat ouvert ou ferme d'un porte
+     * @return true si la porte est ouverte, false si elle est fermee
+     */
     public boolean isOpen() {
         return isOpen;
     }
 
+    /**
+     * Fixe l'etat ouvert ou ferme d'un porte
+     * @param open true si on ouvre la porte, false si on la ferme
+     */
     public void setOpen(boolean open) {
         isOpen = open;
     }

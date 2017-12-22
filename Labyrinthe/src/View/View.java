@@ -58,7 +58,6 @@ public class View extends Application {
         //drawPath(laby.getG());
 
         System.out.println(Labyrinthe.getInstance().getG().edgeSet());
-        Labyrinthe.getInstance().getG().hasXsEqualToLimits();
         drawAllWalls(Labyrinthe.getInstance());
 
         primaryStage.show();

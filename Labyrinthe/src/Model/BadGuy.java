@@ -4,10 +4,18 @@ import static Model.Labyrinthe.Directions.*;
 
 public class BadGuy extends Entity{
 
+    /**
+     * Constructeur de la classe BadGuy
+     */
     public BadGuy(){
         super();
     }
 
+    /**
+     * Déplace l'ennemi dans une direction
+     * @param laby L'instance d'un objet Labyrinthe
+     * @param dir Une direction, appartenant à l'enumeration Directions
+     */
     public void move(Labyrinthe laby, Labyrinthe.Directions dir){
         Vertex oldPosition = getPosition();
         switch (dir){

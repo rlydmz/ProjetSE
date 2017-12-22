@@ -26,16 +26,30 @@ public class GameManager {
     private boolean gameOver = false;
     private boolean goNORTH,goSOUTH,goWEST,goEAST;
 
+    /**
+     * Constructeur de la classe GameManager
+     * @param laby L'instance d'un objet Labyrinthe
+     * @param view L'instance d'un objet View
+     * @param stage L'instance d'un objet Stage, c'est a dire le contexte dans lequel on execute l'application
+     */
     public GameManager(Labyrinthe laby, View view, Stage stage){
         this.laby = laby;
         this.view = view;
         this.stage = stage;
     }
 
+    /**
+     * Gere le Timer de l'application ainsi que les differentes autres fonctions de GameManagement
+     * @param stage L'instance d'un objet Stage, c'est à dire le contexte dans lequel on execute l'application
+     */
     public void HandleGame(Stage stage){
         manageMovements(stage);
     }
 
+    /**
+     * Gere la pression des touches au clavier et le déplacement du joeur
+     * @param stage L'instance d'un objet Stage, c'est a dire le contexte dans lequel on execute l'application
+     */
     public void manageMovements(Stage stage){
         view.getInstance().getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
@@ -139,9 +153,9 @@ public class GameManager {
         timer.start();
     }
 
-
-
-
+    /**
+     * Gere l'apparition et la disparition des bonbons
+     */
     public void manageEatenCandy(){
         HashSet<Candy> candies = laby.getCandies();
         Iterator i = candies.iterator();
@@ -154,6 +168,9 @@ public class GameManager {
         }
     }
 
+    /**
+     * Gere l'apparition, la disparition des ennemis et la mort du joueur dans le cas d'un contact avec l'un d'eux
+     */
     public void manageEnnemies(){
         HashSet<BadGuy> candies = laby.getBadGuyArmy();
         Iterator i = candies.iterator();
@@ -171,6 +188,9 @@ public class GameManager {
         }
     }
 
+    /**
+     * Gere l'accomplissement du niveau, c'est a dire quand le joueur arrive a la porte de sortie
+     */
     public void manageExit(){
         if (laby.getPackman().getPosition().equals(laby.GetExit().getPosition()) && !gameOver ){
             gameOver=true;
@@ -184,6 +204,10 @@ public class GameManager {
         }
     }
 
+    /**
+     * Renvoie la possibilite ou non de passer a travers une porte. Indirectement, dit si une porte est ouverte ou fermee
+     * @return true si le joueur peut passer la porte, false sinon
+     */
     public boolean canPassDoor(){
         HashSet<Candy> candies = laby.getCandies();
         if(candies.size() == 0)
@@ -191,6 +215,11 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * Deplace l'ennemi selon l'algorithme de Manhattan
+     * @param laby L'instance d'un objet Labyrinthe
+     * @param badGuy L'instance d'un objet BadGuy
+     */
     public void movebadGuy(Labyrinthe laby, BadGuy badGuy){
         System.out.println(badGuy.getPosition());
         Vertex vertex = badGuy.getPosition();

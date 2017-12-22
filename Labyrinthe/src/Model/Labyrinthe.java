@@ -20,6 +20,10 @@ public class Labyrinthe {
 
     private static Labyrinthe ourInstance = null;
 
+    /**
+     * Retourne l'instance unique de la classe Labyrinthe
+     * @return Une instance unique de la classe Labyrinthe
+     */
     public static Labyrinthe getInstance() {
         if (ourInstance == null) {
             ourInstance = new Labyrinthe();
@@ -43,46 +47,90 @@ public class Labyrinthe {
         WEST;
     }
 
+    /**
+     * Retourne la hauteur du labyrinthe
+     * @return Un entier superieur a 0
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Retourne la largeur du labyrinthe
+     * @return Un entier superieur a 0
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Retourne l'instance Graph du graphe associee au labyrinthe
+     * @return Un objet de type Graph
+     */
     public Graph getG() {
         return graph;
     }
 
+    /**
+     * Retourne l'objet de notre joueur
+     * @return Un objet de type NiceGuy
+     */
     public NiceGuy getPackman() {
         return packman;
     }
 
+    /**
+     * Retourne l'objet de notre sortie
+     * @return Un objet de type Exit
+     */
     public Exit GetExit() {
         return exit;
     }
 
+    /**
+     * Retourne la liste des ennemis presents dans le labyrinthe
+     * @return Un HashSet rempli de BadGuy
+     */
     public HashSet<BadGuy> getBadGuyArmy(){
         return badGuyArmy;
     }
 
+    /**
+     * Ajoute un ennemi au labyrinthe
+     * @param badGuy Un objet de type BadGuy
+     */
     public void addBadGuyToArmy(BadGuy badGuy){
         badGuyArmy.add(badGuy);
     }
 
+    /**
+     * Retourne la liste des bonbons presents dans le labyrinthe
+     * @return Un HashSet remplit de Candy
+     */
     public HashSet<Candy> getCandies(){
         return candies;
     }
 
+    /**
+     * Ajoute un bonbon au labyrinthe
+     * @param candy Un objet de type Candy
+     */
     public void addCandy(Candy candy){
         candies.add(candy);
     }
 
+    /**
+     * Retire un bonbon du labyrinthe dans le cas ou il aurait ete ingere
+     * @param candy
+     */
     public void removeCandy(Candy candy){
         candies.remove(candy);
     }
 
+    /**
+     * Construit un graphe parfait jusqu'a ce que le labyrinthe soit remplit
+     * @param vertex Un objet de type Vertex, point de depart de l'algorythme
+     */
     public void buildRandomPath(Vertex vertex) {
 
         graph.addVertexToArray(vertex);
@@ -132,6 +180,9 @@ public class Labyrinthe {
         }
     }
 
+    /**
+     * Casse des murs au hasard pour permettre un pasage plus aise du joueur dans le labyrinthe
+     */
     public void openDoorRandom() {
         //On essaie 1000 fois, apres quoi on renonce
         for (int i = 1; i <= 1000; ++i) {
@@ -156,6 +207,11 @@ public class Labyrinthe {
         }
     }
 
+    /**
+     * Calcule le chemin le plus court entre deux Vertex
+     * @param source Un objet de type Vertex, source
+     * @param target Un objet de type vertex, cible
+     */
     private void calculateManhattanDistance(Vertex source, Vertex target) {
         System.out.println(source.getNbr() + " - " + target.getNbr());
 
@@ -185,6 +241,12 @@ public class Labyrinthe {
         }
     }
 
+    /**
+     * Determine si le passage d'un Vertex source vers une direction est possible ou non, ou autrement dit s'il existe un mur dans le direction donnee
+     * @param v Un objet de type Vertex, source
+     * @param dir Une direction de type Directions
+     * @return true si le passage est impossible, false sinon
+     */
     public boolean isWall(Vertex v, Directions dir){
         Edge e = graph.getEdge(v, dir);
         return (e==null);
@@ -196,12 +258,23 @@ public class Labyrinthe {
         return true;
     }
 
+    /**
+     * Lance l'algorithme de Manhattan a partir d'une source et d'une cible
+     * @param source Un objet de type Vertex, source
+     * @param target Un objet de type Vertex, cible
+     */
     public void launchManhattan(Vertex source, Vertex target) {
         for (Vertex vertex : graph.vertexSet())
             vertex.setNbr(0);
         calculateManhattanDistance(source, target);
     }
 
+    /**
+     * Determince si deux Vertex sont caracterises par une arrete dans le graphe du labyrinthe
+     * @param src Un objet de type Vertex, source
+     * @param target Un objet de type Vertex, cible
+     * @return true si l'arrete existe, false sinon
+     */
     public boolean isConnected(Vertex src, Vertex target){
         if(getG().getEdge(src, target) != null)
             return true;

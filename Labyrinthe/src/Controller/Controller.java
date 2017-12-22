@@ -21,9 +21,19 @@ public class Controller {
 		laby.buildRandomPath(v);
 	}
 
+	/**
+	 * Retourne l'instance unique d'un objet Controller
+	 * @return Une instance unique de notre Controller
+	 */
 	public static Controller getInstance() {
 		return instance;
 	}
+
+	/**
+	 *
+	 * @param primaryStage L'instance d'un objet Stage, c'est a dire le contexte dans lequel on execute l'application
+	 * @throws Exception Renvoie une Exception si une probleme survient
+	 */
 
 	public void start(Stage primaryStage) throws Exception {
 		view.start(primaryStage);

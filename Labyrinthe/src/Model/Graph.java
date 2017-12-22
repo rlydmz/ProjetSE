@@ -15,6 +15,10 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
     private int nbElement;
     private static int SIZE = Labyrinthe.SIZE;
 
+    /**
+     * Contructeur de la classe Graph
+     * @param size Un entier corresponsant a la taille tu graphe (= nombre de sommets au total)
+     */
     public Graph(int size){
         super(Edge.class);
         nbElement = 0;
@@ -26,6 +30,10 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         }
     }
 
+    /**
+     * Retourne un Vertex avec une position aleatoire
+     * @return Un objet de type Vertex
+     */
     public Vertex randomVertex() {
         Random randomGenerator = new Random();
         int randomX = randomGenerator.nextInt(16);
@@ -34,6 +42,12 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         return v;
     }
 
+    /**
+     * Retourne un Vertex correspondant au deplacement d'un autre Vertex vers une direction donnee
+     * @param actual Un objet de type Vertex considere comme point de depart du mouvement
+     * @param dir Une direction de type Directions
+     * @return Un objet de type Vertex
+     */
     public Vertex getVertexByDir(Vertex actual, Directions dir) {
         Vertex v = new Vertex(0,0);
         switch(dir) {
@@ -73,6 +87,12 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         return null;
     }
 
+    /**
+     * Indique l'existence ou non d'un Vertex dans le Graph en fonction d'un direction donnee
+     * @param vertex Un objet de type Vertex
+     * @param dir Une direction de type Directions
+     * @return Un objet de type Vertex
+     */
     public boolean doesntExist(Vertex vertex, Directions dir) {
         Vertex newVertex = getVertexByDir(vertex,dir);
         if(vertexList[newVertex.getX()][newVertex.getY()] == null || !vertexList[newVertex.getX()][newVertex.getY()].equals(newVertex)){
@@ -82,11 +102,23 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
             return false;
     }
 
+    /**
+     * Retourne une arrete representee par un objet de type Edge contenu dans le Graph
+     * @param v Un objet de type Vertex
+     * @param dir Une direction de type Directions
+     * @return Un objet de type Edge ou null
+     */
     public Edge getEdge(Vertex v, Directions dir){
         Vertex newVertex = getVertexByDir(v, dir);
         return getEdge(v, newVertex);
     }
 
+    /**
+     * Retourne une arrete representee par un objet de type Edge contenu dans le Graph en fonction de deux Vertex donnes
+     * @param vs Un objet de type Vertex, source
+     * @param vt Un objet de type Vertex, cible
+     * @return Un objet de type Edge ou null
+     */
     public Edge getEdge(Vertex vs, Vertex vt){
         Set<Edge> edgeList = edgeSet();
         Iterator i = edgeList.iterator();
@@ -99,11 +131,11 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         return null;
     }
 
-    public Object getEqualVertex(Vertex v) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
+    /**
+     * Ajoute au Graph le Vertex qui lui est passe en parametre
+     * @param v Un objet de type Vertex
+     * @return true si l'ajout est fructueux, false sinon
+     */
     public boolean addVertexToArray(Vertex v){
         if(vertexList[v.getX()][v.getY()] == null){
             vertexList[v.getX()][v.getY()] = v;
@@ -112,23 +144,6 @@ public class Graph extends SimpleGraph<Vertex, Edge>{
         else{
             return false;
         }
-    }
-
-    public boolean hasXsEqualToLimits(){
-        Set<Edge> set = edgeSet();
-        Iterator i = set.iterator();
-        int cpt = 0;
-        while(i.hasNext()){
-            Edge e = (Edge)i.next();
-            System.out.println(e.getTarget());
-            if(e.getTarget().getX() == 0 || e.getTarget().getX() == 15)
-                cpt++;
-        }
-        System.out.println("cpt = " + cpt);
-        if(cpt != 0)
-            return true;
-        else
-            return false;
     }
     
 }
